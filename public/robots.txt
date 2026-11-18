@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /pricing
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /login
+
+Sitemap: /sitemap.xml
