@@ -1,0 +1,39 @@
+:{$PORT:80} {
+    root * dist
+    encode gzip zstd
+
+    # Security Headers
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+
+    # 1. Deny access to hidden dotfiles and dotfolders (.env, .git, .ssh, etc.)
+    @dotfiles {
+        path /.*
+        not path /.well-known/*
+    }
+    respond @dotfiles "Not Found" 404 {
+        close
+    }
+
+    # 2. Deny access to sensitive file extensions & backups
+    @sensitive_exts path *.env* *.sql *.zip *.tar *.gz *.tgz *.bak *.backup *.key *.pem *.crt *.rsa *.log *.yml *.yaml *.conf *.config *.ini *.db *.sqlite* *.sh *.bash
+    respond @sensitive_exts "Not Found" 404 {
+        close
+    }
+
+    # 3. Deny access to common server & debug probe paths
+    @scanner_probes path /actuator* /api/.env* /docker-compose* /server.key* /id_rsa* /id_ed25519* /wp-admin* /phpmyadmin*
+    respond @scanner_probes "Not Found" 404 {
+        close
+    }
+
+    # Serve legitimate static files
+    file_server
+
+    # SPA routing fallback for clean URLs
+    try_files {path} {path}/ /index.html
+}
