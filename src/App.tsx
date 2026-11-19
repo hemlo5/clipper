@@ -70,9 +70,10 @@ function AnalyticsAndScrollManager() {
   React.useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
       const pagePath = location.pathname + location.search + location.hash;
-      (window as any).gtag('config', 'G-KGM8P2SDQK', {
-        page_path: pagePath,
+      (window as any).gtag('event', 'page_view', {
         page_title: document.title,
+        page_location: window.location.href,
+        page_path: pagePath,
       });
     }
   }, [location.pathname, location.search, location.hash]);
