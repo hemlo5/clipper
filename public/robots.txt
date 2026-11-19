@@ -1,8 +1,35 @@
+# HEMLO robots.txt
 User-agent: *
 Allow: /
-Allow: /pricing
+Allow: /free-ai-video-clipper
+Allow: /opusclip-alternative
+Allow: /free-opusclip-alternative
+Allow: /opusclip-vs-hemlo
+Allow: /katto-alternative
+Allow: /free-katto-alternative
+Allow: /katto-vs-hemlo
+Allow: /klap-alternative
+Allow: /vizard-alternative
+Allow: /best-free-ai-video-clipper
+Allow: /automatic-video-clipper
+Allow: /ai-podcast-clip-generator
+Allow: /long-video-to-shorts
+Allow: /youtube-shorts-generator
+Allow: /ai-reels-maker
+Allow: /podcast-to-shorts
+Allow: /video-repurposing-tool
+Allow: /gta-6-clipper
+Allow: /gaming-clip-maker
+Allow: /gameplay-to-shorts
+Allow: /twitch-clip-generator
+Allow: /youtube-gaming-clips
+Allow: /blog
+Allow: /blog/*
+
+# Disallow private application, authentication & API routes
 Disallow: /dashboard
 Disallow: /dashboard/
 Disallow: /login
+Disallow: /api/
 
-Sitemap: /sitemap.xml
+Sitemap: https://hemloai.com/sitemap.xml

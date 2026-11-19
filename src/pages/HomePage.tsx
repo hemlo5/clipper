@@ -3,75 +3,121 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import {
   ArrowRight,
-  CalendarDays,
+  Check,
   ChevronDown,
-  Crop,
+  Download,
   Film,
   Layers,
+  Link2,
+  Mic,
   Play,
   Scissors,
   SlidersHorizontal,
-  TrendingUp,
-  Type,
+  Sparkles,
+  UploadCloud,
   Users,
+  Video,
+  Zap,
+  Gamepad2,
+  Scale,
+  Award,
 } from 'lucide-react';
-import { PRICING_PLANS } from '../config/pricing';
-import { INITIAL_CLIPS } from '../data/mockData';
-import { calculateAnnualSavingsPercent } from '../lib/clipLogic';
 import { useDocumentMeta } from '../components/layout/useDocumentMeta';
 import { MarketingNavbar } from '../components/layout/MarketingNavbar';
 import { MarketingFooter } from '../components/layout/MarketingFooter';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { SegmentedControl } from '../components/ui/SegmentedControl';
-import { MediaImage } from '../components/ui/MediaImage';
+import { FaqAccordion } from '../components/seo/FaqAccordion';
+import { SeoCtaBanner } from '../components/seo/SeoCtaBanner';
 
-const FAQ_ITEMS = [
+const SAMPLE_GTA_CLIPS = [
   {
-    q: 'How does HEMLO find the best moments in long-form videos?',
-    a: 'HEMLO analyzes spoken hooks, topic transitions, pacing changes, and audience retention patterns across your transcript to isolate standalone short clips.',
+    id: 'clip_bc8dcc5e6764',
+    rank: 1,
+    title: 'Krenta thought of six releases in just a couple of days',
+    hookText: 'Krenta thought of six releases in just a couple of days and leading up to launch and the crazy part is this is offer the job.',
+    score: 75,
+    duration: '18.7s',
+    aspectRatio: '9:16 Vertical',
+    streamUrl: '/api/clips/clip_bc8dcc5e6764/stream',
+    downloadUrl: '/api/clips/clip_bc8dcc5e6764/download',
   },
   {
-    q: 'Which platforms and aspect ratios can I export?',
-    a: 'Export clips framed in 9:16 vertical for YouTube Shorts, Instagram Reels, and TikTok, 1:1 square for LinkedIn, 4:5 portrait, or 16:9 widescreen.',
+    id: 'clip_a572779ff8db',
+    rank: 2,
+    title: "GTA 6 — You guys know I've been learning out about it",
+    hookText: "GTA You guys know I've been learning out about it and following all the updates and Rockstar leaks closely.",
+    score: 80,
+    badge: '⭐ Highest Viral Score',
+    duration: '26.5s',
+    aspectRatio: '9:16 Vertical',
+    streamUrl: '/api/clips/clip_a572779ff8db/stream',
+    downloadUrl: '/api/clips/clip_a572779ff8db/download',
   },
   {
-    q: 'Can I customize captions, fonts, and brand templates?',
-    a: 'Yes. Set your Brand Kit logo, cobalt or custom brand accents, heading fonts, and word-by-word animated caption presets once and apply them across every project.',
+    id: 'clip_704b93b11317',
+    rank: 3,
+    title: "There's going to be a lot more to it than just five cities",
+    hookText: "there's going to be a lot more to it than just five cities. Rockstar has built a dynamic living ecosystem.",
+    score: 73,
+    duration: '15.2s',
+    aspectRatio: '9:16 Vertical',
+    streamUrl: '/api/clips/clip_704b93b11317/stream',
+    downloadUrl: '/api/clips/clip_704b93b11317/download',
+  },
+];
+
+const HOMEPAGE_FAQS = [
+  {
+    q: 'Is HEMLO really a free AI video clipper?',
+    a: 'Yes, HEMLO is completely free. There are no monthly subscriptions, no expiring credits, and no paywalls. You can paste public YouTube links or upload video files to generate vertical clips at zero cost.',
   },
   {
-    q: 'Do I need to install desktop editing software?',
-    a: 'No. Drop a YouTube link or upload a video in your browser, review your viral-scored clips, refine captions and framing in the AI editor, and schedule directly.',
+    q: 'Do you put a watermark on the exported clips?',
+    a: 'No watermarks! All rendered MP4 clips are clean, unbranded 1080x1920 vertical videos with animated captions burned in, ready to post directly to YouTube Shorts, Instagram Reels, and TikTok without violating monetization rules.',
   },
   {
-    q: 'How do filler word and silence removal controls work?',
-    a: 'Inside the AI editor, toggle filler word removal and silence trimming to tighten pacing automatically without manually slicing waveforms.',
+    q: 'How does HEMLO compare to OpusClip, Katto, and Klap?',
+    a: 'Paid tools like OpusClip ($9-$29/mo) and Katto ($19-$49/mo) charge monthly recurring subscriptions and place watermarks on their free trials. HEMLO provides the same core capabilities — Whisper speech-to-text, DeepSeek hook detection, MediaPipe face tracking, and animated word subtitles — completely free.',
+  },
+  {
+    q: 'How does the automatic vertical 9:16 reframing work?',
+    a: 'MediaPipe face detection scans each video frame to identify where active speakers are positioned. Our camera smoothing algorithm plans horizontal panning coordinates to keep speakers centered in the vertical 9:16 frame without abrupt jerking motion.',
+  },
+  {
+    q: 'Can I download the SRT subtitle files or edit the video?',
+    a: 'Yes! Every clip comes with both the finished 1080p MP4 video with burned-in subtitles and a downloadable .SRT file. You can also open any clip in the interactive editor to tweak words, trim timestamps, and adjust styles.',
+  },
+  {
+    q: 'What video length works best with HEMLO?',
+    a: 'HEMLO processes long-form videos up to 60 minutes in length. For optimal speed, 10 to 45 minute podcasts, gaming sessions, and interviews yield the highest density of viral hooks.',
   },
 ];
 
 export default function HomePage() {
   useDocumentMeta({
-    title: 'HEMLO — AI Video Clipping & Content Repurposing Platform',
+    title: 'HEMLO – Free AI Video Clipper | Turn Long Videos into Shorts',
     description:
-      'Turn long-form videos, podcasts, and interviews into engaging YouTube Shorts, Instagram Reels, and TikToks with AI captions, reframing, and viral scoring.',
-    noindex: false,
+      'Create short-form videos from long videos with HEMLO, a free AI video clipper. Generate podcast clips, YouTube Shorts, Instagram Reels and more.',
     canonicalPath: '/',
   });
 
   const navigate = useNavigate();
   const [heroMode, setHeroMode] = React.useState<'url' | 'upload'>('url');
-  const [heroUrl, setHeroUrl] = React.useState('https://youtube.com/watch?v=hemlo-podcast-48');
-  const [previewRatio, setPreviewRatio] = React.useState<'9:16' | '1:1' | '16:9'>('9:16');
-  const [captionPreset, setCaptionPreset] = React.useState<'bold-pop' | 'minimal-clean' | 'podcast-editorial'>('bold-pop');
-  const [activeUseCase, setActiveUseCase] = React.useState<'podcasters' | 'creators' | 'marketing' | 'agencies'>('podcasters');
-  const [billing, setBilling] = React.useState<'monthly' | 'annual'>('annual');
-  const [openFaq, setOpenFaq] = React.useState<number | null>(0);
-
-  const featuredClip = INITIAL_CLIPS[0];
+  const [heroUrl, setHeroUrl] = React.useState('https://www.youtube.com/watch?v=RrgB-jXPcaI');
+  const [aspectRatio, setAspectRatio] = React.useState<'9:16' | '1:1' | '16:9'>('9:16');
+  const [captionPreset, setCaptionPreset] = React.useState<'bold-pop' | 'minimal-clean'>('bold-pop');
 
   const handleHeroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/dashboard/create', { state: { prefillUrl: heroMode === 'url' ? heroUrl : '' } });
+    navigate('/dashboard/create', {
+      state: {
+        prefillUrl: heroMode === 'url' ? heroUrl.trim() : '',
+        aspectRatio,
+        captionPreset,
+      },
+    });
   };
 
   return (
@@ -80,680 +126,432 @@ export default function HomePage() {
 
       <main>
         {/* HERO SECTION */}
-        <section className="max-w-[1200px] mx-auto px-5 md:px-8 pt-10 md:pt-16 pb-16 md:pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <section id="try-free" className="max-w-[1200px] mx-auto px-5 md:px-8 pt-8 md:pt-14 pb-12 md:pb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Hero Pitch */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="lg:col-span-6 space-y-6"
+              className="lg:col-span-6 space-y-5"
             >
-              <p className="text-sm font-semibold text-[#155EEF]">
-                Your videos. More moments. More content.
-              </p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+                <Zap className="h-3.5 w-3.5 fill-current text-emerald-600" />
+                <span>100% Free · No Watermarks · No Subscription</span>
+              </div>
 
               <h1
-                className="font-display font-extrabold tracking-tight text-[#171B2B] leading-[1.06]"
-                style={{ fontSize: 'clamp(2.35rem, 4.2vw, 3.75rem)', textWrap: 'balance' }}
+                className="font-display font-extrabold tracking-tight text-[#171B2B] leading-[1.08]"
+                style={{ fontSize: 'clamp(2.35rem, 4.3vw, 3.85rem)', textWrap: 'balance' }}
               >
-                Let&apos;s turn your videos into content worth watching.
+                The Free AI Video Clipper Built for Creators.
               </h1>
 
               <p className="text-base md:text-lg text-[#646A7B] leading-relaxed max-w-xl">
-                Find the best moments in your long videos. Turn them into captivating Shorts, Reels and TikToks with AI.
+                Turn podcasts, interviews, gameplay and long-form videos into engaging short clips. Find highlights, generate captions and create vertical videos with HEMLO.
               </p>
 
-              <div className="flex flex-wrap items-center gap-3.5 pt-1">
-                <Link to="/dashboard/create">
-                  <Button size="lg">
-                    Start creating
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <a href="#how-it-works">
-                  <Button variant="outline" size="lg">
-                    See how it works
-                  </Button>
-                </a>
+              {/* Free Highlights Checklist */}
+              <div className="grid grid-cols-2 gap-2.5 pt-1 text-xs font-semibold text-[#171B2B]">
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <Check className="h-3 w-3" />
+                  </div>
+                  <span>Full 1080x1920 HD MP4 Export</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <Check className="h-3 w-3" />
+                  </div>
+                  <span>Burned-in Animated Captions</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <Check className="h-3 w-3" />
+                  </div>
+                  <span>MediaPipe 9:16 Face Tracking</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-4 w-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <Check className="h-3 w-3" />
+                  </div>
+                  <span>Zero Logo Watermarks</span>
+                </div>
               </div>
 
-              <div className="pt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-medium text-[#646A7B]">
-                <span>YouTube Shorts maker</span>
-                <span aria-hidden="true">·</span>
-                <span>Instagram Reels maker</span>
-                <span aria-hidden="true">·</span>
-                <span>Podcast clip generator</span>
+              <div className="pt-2 flex flex-wrap items-center gap-3">
+                <a href="#samples">
+                  <Button variant="outline" size="md">
+                    <Play className="h-4 w-4 text-[#155EEF]" />
+                    Watch Sample Clips (GTA 6)
+                  </Button>
+                </a>
+                <Link to="/opusclip-alternative">
+                  <Button variant="ghost" size="md">
+                    Why We Beat OpusClip →
+                  </Button>
+                </Link>
               </div>
             </motion.div>
 
-            {/* Realistic Reference-Inspired Product UI Preview */}
+            {/* Right Hero Interactive Paste Link Form */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.08 }}
-              className="lg:col-span-6 relative"
+              className="lg:col-span-6"
             >
-              <div className="relative mx-auto max-w-[540px]">
-                {/* Primary Floating White Card */}
-                <Card elevated className="p-5 md:p-6">
-                  <div className="flex items-center justify-between gap-4 mb-4">
-                    <div>
-                      <p className="text-xs font-medium text-[#646A7B]">New clipping project</p>
-                      <h2 className="text-lg font-bold text-[#171B2B] font-display">
-                        Let&apos;s find your best moments.
-                      </h2>
-                    </div>
-                    <span className="text-xs font-mono font-semibold text-[#155EEF] tabular-nums whitespace-nowrap shrink-0">
-                      95 / 100
+              <Card elevated className="p-6 md:p-7 border border-[#E8EAEE] shadow-[0_16px_40px_rgba(23,27,43,0.08)] bg-white relative rounded-3xl">
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <div>
+                    <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">
+                      Instant Free Access
                     </span>
+                    <h2 className="text-xl font-bold text-[#171B2B] font-display mt-0.5">
+                      Clip your first video free
+                    </h2>
                   </div>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-[#155EEF] bg-[#EEF4FF] px-2.5 py-1 rounded-xl">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Modal AI
+                  </span>
+                </div>
 
-                  <SegmentedControl
-                    ariaLabel="Source mode preview"
-                    value={heroMode}
-                    onChange={setHeroMode}
-                    fullWidth
-                    size="sm"
-                    className="mb-4"
-                    options={[
-                      { value: 'url', label: 'Paste link' },
-                      { value: 'upload', label: 'Upload video' },
-                    ]}
-                  />
+                <SegmentedControl
+                  ariaLabel="Source mode"
+                  value={heroMode}
+                  onChange={setHeroMode}
+                  fullWidth
+                  size="sm"
+                  className="mb-4"
+                  options={[
+                    { value: 'url', label: 'Paste YouTube link' },
+                    { value: 'upload', label: 'Upload video file' },
+                  ]}
+                />
 
-                  <form onSubmit={handleHeroSubmit} className="space-y-4">
-                    {heroMode === 'url' ? (
-                      <div>
-                        <label htmlFor="hero-video-url" className="sr-only">
-                          Video link
-                        </label>
+                <form onSubmit={handleHeroSubmit} className="space-y-4">
+                  {heroMode === 'url' ? (
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <Link2 className="h-4 w-4 text-[#8C92A3] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           id="hero-video-url"
                           type="url"
+                          required
                           value={heroUrl}
                           onChange={(e) => setHeroUrl(e.target.value)}
-                          placeholder="Paste YouTube or podcast URL"
-                          className="w-full h-11 rounded-2xl bg-[#F4F5F7] border border-[#E6E8EC] px-4 text-sm text-[#171B2B] focus:bg-white focus:border-[#155EEF] focus:outline-none"
+                          placeholder="Paste YouTube video URL..."
+                          className="w-full h-12 rounded-2xl bg-[#F4F5F7] border border-[#E6E8EC] pl-11 pr-4 text-sm text-[#171B2B] font-medium focus:bg-white focus:border-[#155EEF] focus:outline-none transition-all shadow-inner"
                         />
                       </div>
-                    ) : (
-                      <div className="rounded-2xl bg-[#F4F5F7] border border-dashed border-[#D1D5DB] px-4 py-4 text-center">
-                        <p className="text-sm font-semibold text-[#171B2B]">
-                          Drop MP4, MOV, or WebM video
-                        </p>
-                        <p className="text-xs text-[#646A7B] mt-0.5">
-                          Up to 4K resolution · Automatic speaker tracking
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Nested Clip Result Preview Strip */}
-                    <div className="grid grid-cols-12 gap-3.5 items-center rounded-2xl bg-[#F7F7F5] border border-[#E8EAEE] p-3">
-                      <div className="col-span-5 relative aspect-[9/11] rounded-2xl overflow-hidden bg-[#171B2B]">
-                        <MediaImage
-                          src={featuredClip.thumbnailUrl}
-                          alt="Active speaker reframed vertical clip preview"
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                        <div className="absolute bottom-2.5 left-2 right-2 text-center">
-                          <span className="inline-block bg-[#171B2B]/90 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl leading-tight">
-                            Put the sharpest <span className="text-[#60A5FA]">insight</span> first
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="col-span-7 space-y-2.5">
-                        <div className="flex items-center justify-between text-xs text-[#646A7B]">
-                          <span>Clip 01 · 9:16 Vertical</span>
-                          <span className="font-mono font-semibold text-[#171B2B] tabular-nums">0:42</span>
-                        </div>
-                        <p className="text-sm font-bold text-[#171B2B] leading-snug">
-                          Why the first 3 seconds decide 80% of your retention
-                        </p>
-                        <div className="grid grid-cols-3 gap-1.5 text-center">
-                          <div className="bg-white rounded-xl py-1.5 border border-[#E8EAEE]">
-                            <p className="text-[10px] text-[#646A7B]">Hook</p>
-                            <p className="text-xs font-bold text-[#171B2B] tabular-nums">97</p>
-                          </div>
-                          <div className="bg-white rounded-xl py-1.5 border border-[#E8EAEE]">
-                            <p className="text-[10px] text-[#646A7B]">Flow</p>
-                            <p className="text-xs font-bold text-[#171B2B] tabular-nums">94</p>
-                          </div>
-                          <div className="bg-white rounded-xl py-1.5 border border-[#E8EAEE]">
-                            <p className="text-[10px] text-[#646A7B]">Clarity</p>
-                            <p className="text-xs font-bold text-[#171B2B] tabular-nums">94</p>
-                          </div>
-                        </div>
+                      <div className="flex items-center gap-2 text-xs text-[#646A7B] pt-1">
+                        <span className="text-[11px] font-semibold text-[#8C92A3]">Try sample:</span>
+                        <button
+                          type="button"
+                          onClick={() => setHeroUrl('https://www.youtube.com/watch?v=RrgB-jXPcaI')}
+                          className="text-[#155EEF] hover:underline font-medium text-[11px]"
+                        >
+                          GTA 6 Speculation Video
+                        </button>
                       </div>
                     </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-[#D2D6DF] rounded-2xl p-6 text-center bg-[#F9FAFB] hover:border-[#155EEF] transition-colors cursor-pointer">
+                      <UploadCloud className="h-8 w-8 text-[#155EEF] mx-auto mb-2" />
+                      <p className="text-sm font-semibold text-[#171B2B]">Upload long-form video file</p>
+                      <p className="text-xs text-[#8C92A3] mt-1">MP4, MOV up to 60 minutes</p>
+                    </div>
+                  )}
 
-                    <Button type="submit" size="lg" className="w-full">
-                      Find my best clips
-                    </Button>
-                  </form>
-                </Card>
-
-                {/* Overlapping Secondary Floating Mini Card positioned cleanly below CTA */}
-                <div className="hidden sm:flex items-center justify-between gap-4 -mt-3 ml-auto mr-4 relative z-10 bg-white rounded-2xl border border-[#E8EAEE] shadow-[0_12px_32px_rgba(23,27,43,0.08)] px-4 py-2.5 max-w-[300px]">
-                  <div>
-                    <p className="text-[11px] font-medium text-[#646A7B]">Auto-reframe &amp; captions</p>
-                    <p className="text-xs font-bold text-[#171B2B]">
-                      5 clips ready in 9:16
-                    </p>
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label className="text-[11px] font-semibold text-[#646A7B] block mb-1">Aspect Ratio</label>
+                      <select
+                        value={aspectRatio}
+                        onChange={(e) => setAspectRatio(e.target.value as any)}
+                        className="w-full h-10 rounded-xl bg-[#F4F5F7] border border-[#E6E8EC] px-3 text-xs font-semibold text-[#171B2B]"
+                      >
+                        <option value="9:16">9:16 (Shorts / Reels)</option>
+                        <option value="1:1">1:1 Square</option>
+                        <option value="16:9">16:9 Landscape</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[11px] font-semibold text-[#646A7B] block mb-1">Captions</label>
+                      <select
+                        value={captionPreset}
+                        onChange={(e) => setCaptionPreset(e.target.value as any)}
+                        className="w-full h-10 rounded-xl bg-[#F4F5F7] border border-[#E6E8EC] px-3 text-xs font-semibold text-[#171B2B]"
+                      >
+                        <option value="bold-pop">⚡ Bold Animated Pop</option>
+                        <option value="minimal-clean">✨ Minimal Clean</option>
+                      </select>
+                    </div>
                   </div>
-                  <span className="text-xs text-[#155EEF] font-semibold whitespace-nowrap">
-                    Shorts · Reels · TikTok
-                  </span>
-                </div>
-              </div>
+
+                  <Button type="submit" size="lg" className="w-full shadow-lg font-bold">
+                    <Scissors className="h-4 w-4 mr-2" />
+                    <span>Generate Viral Clips Free</span>
+                    <ArrowRight className="h-4 w-4 ml-auto" />
+                  </Button>
+                </form>
+              </Card>
             </motion.div>
           </div>
         </section>
 
-        {/* HOW HEMLO WORKS */}
-        <section id="how-it-works" className="max-w-[1200px] mx-auto px-5 md:px-8 py-14 md:py-20">
-          <div className="max-w-2xl mb-10">
-            <p className="text-sm font-semibold text-[#155EEF] mb-2">How HEMLO works</p>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#171B2B] font-display" style={{ textWrap: 'balance' }}>
-              From one long recording to a full week of short-form clips.
-            </h2>
-          </div>
+        {/* SECTION: WORKING SAMPLE CLIPS */}
+        <section id="samples" className="py-16 bg-white border-y border-[#E8EAEE]">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-8">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#155EEF] text-xs font-bold border border-blue-100">
+                <Play className="h-3 w-3 fill-current" />
+                Live Demo Results
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#171B2B] font-display mt-2">
+                Sample Clips Generated with HEMLO
+              </h2>
+              <p className="text-sm text-[#646A7B] mt-2">
+                All 3 clips below were extracted automatically from a horizontal 16:9 widescreen YouTube video using our free AI pipeline.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                step: '01. Drop your source video',
-                desc: 'Paste a YouTube link or upload an MP4, MOV, or podcast recording in seconds.',
-                meta: 'Supports interviews, keynotes & webinars',
-              },
-              {
-                step: '02. AI surfaces winning hooks',
-                desc: 'HEMLO detects compelling arguments, scores viral potential, and frames the active speaker.',
-                meta: 'Automatic hook & highlight detection',
-              },
-              {
-                step: '03. Refine & schedule everywhere',
-                desc: 'Edit word-by-word captions, apply your Brand Kit, and queue clips across Shorts, Reels, and TikTok.',
-                meta: '9:16, 1:1, 4:5 & 16:9 exports',
-              },
-            ].map((item) => (
-              <Card key={item.step} className="p-7 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-[#171B2B] font-display">{item.step}</h3>
-                  <p className="text-sm text-[#646A7B] leading-relaxed mt-2.5">{item.desc}</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {SAMPLE_GTA_CLIPS.map((clip) => (
+                <div
+                  key={clip.id}
+                  className="bg-[#F7F7F5] rounded-3xl border border-[#E8EAEE] overflow-hidden shadow-sm flex flex-col"
+                >
+                  <div className="relative aspect-[9/16] bg-black">
+                    <video
+                      src={clip.streamUrl}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-bold">
+                      Clip #{clip.rank}
+                    </div>
+                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-emerald-500/90 text-white text-[11px] font-bold">
+                      Score: {clip.score}
+                    </div>
+                  </div>
+
+                  <div className="p-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-bold text-sm text-[#171B2B] line-clamp-2">
+                        {clip.title}
+                      </h3>
+                      <div className="text-xs text-[#8C92A3] mt-1">
+                        {clip.duration} · 1080x1920 Vertical HD
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-[#E8EAEE] flex items-center justify-between">
+                      <a
+                        href={clip.downloadUrl}
+                        download
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#155EEF] hover:underline"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        Download Clean MP4
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs font-medium text-[#155EEF] mt-6 pt-4 border-t border-[#E8EAEE]">
-                  {item.meta}
-                </p>
-              </Card>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* CORE CAPABILITIES: INTERACTIVE FEATURE SHOWCASE */}
-        <section id="features" className="max-w-[1200px] mx-auto px-5 md:px-8 py-14 md:py-20 space-y-8">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold text-[#155EEF] mb-2">AI video clipping software</p>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#171B2B] font-display" style={{ textWrap: 'balance' }}>
-              Every step of short-form repurposing in one calm workspace.
+        {/* SECTION: 6 PILLARS OF HEMLO CAPABILITIES */}
+        <section id="features" className="py-20 max-w-[1200px] mx-auto px-5 md:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#171B2B] font-display">
+              Everything You Need in a Modern AI Video Clipper
             </h2>
+            <p className="text-sm text-[#646A7B] mt-2">
+              From transcription to highlight ranking and vertical reframing, HEMLO replaces costly subscriptions.
+            </p>
           </div>
 
-          {/* Interactive Bento Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Automatic Video Reframing Interactive Card */}
-            <Card className="lg:col-span-7 p-6 md:p-8 flex flex-col justify-between gap-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#155EEF] mb-1">
-                    <Crop className="h-4 w-4" />
-                    <span>Automatic video reframing</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#171B2B] font-display">
-                    Active speaker tracking across every aspect ratio
-                  </h3>
-                </div>
-                <SegmentedControl
-                  ariaLabel="Preview aspect ratio"
-                  size="sm"
-                  value={previewRatio}
-                  onChange={setPreviewRatio}
-                  options={[
-                    { value: '9:16', label: '9:16' },
-                    { value: '1:1', label: '1:1' },
-                    { value: '16:9', label: '16:9' },
-                  ]}
-                />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+              <div className="h-10 w-10 rounded-2xl bg-blue-100 text-[#155EEF] flex items-center justify-center">
+                <Zap className="h-5 w-5" />
               </div>
-
-              <div className="rounded-2xl bg-[#F7F7F5] border border-[#E8EAEE] p-5 flex items-center justify-center min-h-[260px]">
-                <div
-                  className={`relative overflow-hidden rounded-2xl bg-[#171B2B] transition-all duration-200 shadow-sm ${
-                    previewRatio === '9:16'
-                      ? 'w-[155px] aspect-[9/16]'
-                      : previewRatio === '1:1'
-                      ? 'w-[220px] aspect-square'
-                      : 'w-full max-w-[380px] aspect-video'
-                  }`}
-                >
-                  <MediaImage
-                    src="/src/assets/images/interview_couch_conversation_1795025530354.jpg"
-                    alt="Speaker reframing preview"
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Face tracking guide */}
-                  <div className="absolute top-[18%] left-[18%] w-[26%] h-[36%] border-2 border-[#155EEF] rounded-xl pointer-events-none" />
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 text-center">
-                    <span className="inline-block bg-white/95 text-[#171B2B] text-[11px] font-bold px-2.5 py-1 rounded-xl">
-                      Speaker locked · {previewRatio}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-sm text-[#646A7B]">
-                Keep the active speaker centered automatically or switch to split-screen layouts for two-person podcast interviews.
+              <h3 className="text-base font-bold text-[#171B2B]">Free AI Video Clipping</h3>
+              <p className="text-sm text-[#646A7B] leading-relaxed">
+                Why pay for expensive AI clipping software when you can create clips with HEMLO? Turn long videos into viral-ready Shorts, Reels and TikToks for free.
               </p>
-            </Card>
+              <Link to="/free-ai-video-clipper" className="text-xs font-bold text-[#155EEF] hover:underline inline-flex items-center gap-1">
+                Explore Free Clipper →
+              </Link>
+            </div>
 
-            {/* Viral Potential Scoring Card */}
-            <Card className="lg:col-span-5 p-6 md:p-8 flex flex-col justify-between gap-6">
-              <div>
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#155EEF] mb-1">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>Viral potential scoring</span>
-                </div>
-                <h3 className="text-xl font-bold text-[#171B2B] font-display">
-                  Know which clips to publish first
-                </h3>
-                <p className="text-sm text-[#646A7B] mt-2">
-                  Every clip receives a structured breakdown across hook strength, narrative flow, engagement cues, and clarity.
+            <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+              <div className="h-10 w-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                <Scissors className="h-5 w-5" />
+              </div>
+              <h3 className="text-base font-bold text-[#171B2B]">Long Video to Shorts Conversion</h3>
+              <p className="text-sm text-[#646A7B] leading-relaxed">
+                Automatically convert hour-long webinars, interviews, and presentations into bite-sized 15 to 45 second short vertical stories.
+              </p>
+              <Link to="/long-video-to-shorts" className="text-xs font-bold text-[#155EEF] hover:underline inline-flex items-center gap-1">
+                Convert Long Videos →
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+              <div className="h-10 w-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <Mic className="h-5 w-5" />
+              </div>
+              <h3 className="text-base font-bold text-[#171B2B]">Podcast Clip Generator</h3>
+              <p className="text-sm text-[#646A7B] leading-relaxed">
+                Whisper speech recognition accurately identifies speaker dialogue and controversial moments to maximize podcast audience growth.
+              </p>
+              <Link to="/ai-podcast-clip-generator" className="text-xs font-bold text-[#155EEF] hover:underline inline-flex items-center gap-1">
+                Podcast Clipper →
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+              <div className="h-10 w-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <h3 className="text-base font-bold text-[#171B2B]">Automatic Highlight Detection</h3>
+              <p className="text-sm text-[#646A7B] leading-relaxed">
+                DeepSeek-V3 scores narrative hooks, curiosity gaps, and retention peaks to ensure only high-potential moments are rendered.
+              </p>
+              <Link to="/automatic-video-clipper" className="text-xs font-bold text-[#155EEF] hover:underline inline-flex items-center gap-1">
+                Highlight Automation →
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+              <div className="h-10 w-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                <Film className="h-5 w-5" />
+              </div>
+              <h3 className="text-base font-bold text-[#171B2B]">AI Captions & Subtitles</h3>
+              <p className="text-sm text-[#646A7B] leading-relaxed">
+                Word-by-word animated highlighted captions burned directly into the video for maximum viewer retention on muted social feeds.
+              </p>
+              <Link to="/youtube-shorts-generator" className="text-xs font-bold text-[#155EEF] hover:underline inline-flex items-center gap-1">
+                Shorts Generator →
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+              <div className="h-10 w-10 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center">
+                <Gamepad2 className="h-5 w-5" />
+              </div>
+              <h3 className="text-base font-bold text-[#171B2B]">GTA 6 & Gaming Clips</h3>
+              <p className="text-sm text-[#646A7B] leading-relaxed">
+                Reframe gameplay action and streamer webcam reactions into high-octane 9:16 vertical clips for Twitch and YouTube Gaming creators.
+              </p>
+              <Link to="/gta-6-clipper" className="text-xs font-bold text-[#155EEF] hover:underline inline-flex items-center gap-1">
+                GTA 6 Clipper →
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION: COMPETITOR COMPARISON SUMMARY */}
+        <section className="py-16 bg-[#F0F5FF] border-y border-[#D0DDFE]">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-8">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="text-xs font-bold text-[#155EEF] uppercase tracking-wider">
+                Honest Alternatives
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#171B2B] font-display mt-1">
+                How HEMLO Compares to Paid Clipping Tools
+              </h2>
+              <p className="text-sm text-[#646A7B] mt-2">
+                Stop paying recurring monthly fees for credits that expire.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+                <h3 className="font-bold text-base text-[#171B2B]">vs. OpusClip</h3>
+                <p className="text-xs text-[#646A7B] leading-relaxed">
+                  OpusClip charges $9 to $29+/month and watermarks its free trial clips. HEMLO is 100% free with clean 1080p exports.
                 </p>
-              </div>
-
-              <div className="space-y-3">
-                {[
-                  { label: 'Hook strength', score: 97, note: 'Opens directly on a contrarian claim' },
-                  { label: 'Narrative flow', score: 94, note: 'Self-contained arc in 42 seconds' },
-                  { label: 'Engagement cues', score: 95, note: 'High vocal cadence & question framing' },
-                  { label: 'Topic clarity', score: 94, note: 'Zero missing context or preamble' },
-                ].map((row) => (
-                  <div key={row.label} className="rounded-2xl bg-[#F7F7F5] border border-[#E8EAEE] px-4 py-3">
-                    <div className="flex items-center justify-between text-sm font-bold text-[#171B2B]">
-                      <span>{row.label}</span>
-                      <span className="text-[#155EEF] font-mono tabular-nums">{row.score}</span>
-                    </div>
-                    <p className="text-xs text-[#646A7B] mt-0.5">{row.note}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            {/* AI Captions & Brand Templates */}
-            <Card className="lg:col-span-6 p-6 md:p-8 space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#155EEF] mb-1">
-                    <Type className="h-4 w-4" />
-                    <span>AI captions &amp; brand templates</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#171B2B] font-display">
-                    Word-by-word animated subtitles
-                  </h3>
-                </div>
-                <SegmentedControl
-                  ariaLabel="Caption preset selector"
-                  size="sm"
-                  value={captionPreset}
-                  onChange={setCaptionPreset}
-                  options={[
-                    { value: 'bold-pop', label: 'Bold' },
-                    { value: 'minimal-clean', label: 'Clean' },
-                    { value: 'podcast-editorial', label: 'Editorial' },
-                  ]}
-                />
-              </div>
-
-              <div className="rounded-2xl bg-[#171B2B] p-6 text-center min-h-[140px] flex flex-col items-center justify-center gap-2">
-                <p
-                  className={
-                    captionPreset === 'bold-pop'
-                      ? 'text-xl md:text-2xl font-extrabold text-white tracking-tight'
-                      : captionPreset === 'minimal-clean'
-                      ? 'text-lg font-semibold text-white bg-white/10 px-4 py-2 rounded-2xl'
-                      : 'text-xl font-bold text-[#F7F7F5] border border-white/20 px-5 py-2.5 rounded-2xl'
-                  }
-                >
-                  &ldquo;Put the <span className="text-[#60A5FA]">sharpest</span> insight in frame one.&rdquo;
-                </p>
-                <span className="text-xs text-[#8C92A3]">
-                  Dynamic positioning · Custom fonts · Brand Kit colors
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-2xl bg-[#F7F7F5] p-3.5 border border-[#E8EAEE]">
-                  <p className="font-bold text-[#171B2B]">Filler &amp; silence removal</p>
-                  <p className="text-xs text-[#646A7B] mt-1">Cut pauses and verbal crutches in one toggle.</p>
-                </div>
-                <div className="rounded-2xl bg-[#F7F7F5] p-3.5 border border-[#E8EAEE]">
-                  <p className="font-bold text-[#171B2B]">Reusable brand kits</p>
-                  <p className="text-xs text-[#646A7B] mt-1">Lock logos, intro stingers, and caption themes.</p>
-                </div>
-              </div>
-            </Card>
-
-            {/* AI-Powered Editing & Content Scheduling */}
-            <Card className="lg:col-span-6 p-6 md:p-8 space-y-5">
-              <div>
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#155EEF] mb-1">
-                  <Scissors className="h-4 w-4" />
-                  <span>AI-powered editing &amp; scheduling</span>
-                </div>
-                <h3 className="text-xl font-bold text-[#171B2B] font-display">
-                  Transcript editing, B-roll cues, and publishing calendar
-                </h3>
-                <p className="text-sm text-[#646A7B] mt-1.5">
-                  Trim video by editing words, drop in AI B-roll suggestions, and schedule your weekly queue across every social channel.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { icon: Film, title: 'AI B-roll insertion', desc: 'Contextual cutaway cues synced to transcript beats' },
-                  { icon: Layers, title: 'Multi-track timeline', desc: 'Video, audio waveform, and caption tracks' },
-                  { icon: SlidersHorizontal, title: 'Instant clip resizing', desc: 'Switch 9:16, 1:1, 4:5, or 16:9 in one click' },
-                  { icon: CalendarDays, title: 'Content scheduling', desc: 'Visual calendar for Shorts, Reels & TikTok' },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.title} className="rounded-2xl bg-[#F7F7F5] border border-[#E8EAEE] p-4">
-                      <Icon className="h-4 w-4 text-[#155EEF] mb-2" />
-                      <p className="text-sm font-bold text-[#171B2B]">{item.title}</p>
-                      <p className="text-xs text-[#646A7B] mt-1">{item.desc}</p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="pt-1">
-                <Link to="/dashboard/editor/clip-01">
-                  <Button variant="secondary" size="md">
-                    <Play className="h-4 w-4 text-[#155EEF]" />
-                    Explore AI video editor
-                  </Button>
+                <Link to="/opusclip-alternative" className="text-xs font-bold text-[#155EEF] hover:underline block pt-2">
+                  OpusClip Alternative Breakdown →
                 </Link>
               </div>
-            </Card>
+
+              <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+                <h3 className="font-bold text-base text-[#171B2B]">vs. Katto.ai</h3>
+                <p className="text-xs text-[#646A7B] leading-relaxed">
+                  Katto starts at $19/month for short-form video creation. HEMLO delivers the same core AI clipping pipeline without subscription fees.
+                </p>
+                <Link to="/katto-alternative" className="text-xs font-bold text-[#155EEF] hover:underline block pt-2">
+                  Katto Alternative Breakdown →
+                </Link>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-[#E8EAEE] shadow-sm space-y-3">
+                <h3 className="font-bold text-base text-[#171B2B]">vs. Klap & Vizard</h3>
+                <p className="text-xs text-[#646A7B] leading-relaxed">
+                  Klap charges $29/mo for 10 videos; Vizard restricts free users to watermarked 720p. HEMLO provides full HD 1080p at $0.
+                </p>
+                <Link to="/best-free-ai-video-clipper" className="text-xs font-bold text-[#155EEF] hover:underline block pt-2">
+                  Best Free Clippers Ranked →
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* USE CASES */}
-        <section id="use-cases" className="max-w-[1200px] mx-auto px-5 md:px-8 py-14 md:py-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-            <div className="max-w-xl">
-              <p className="text-sm font-semibold text-[#155EEF] mb-2">Use cases</p>
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#171B2B] font-display">
-                Built for teams turning conversations into reach.
+        {/* SECTION: FREE PLAN DETAILS & TRANSPARENCY */}
+        <section className="py-16 max-w-[1200px] mx-auto px-5 md:px-8">
+          <div className="bg-white p-8 md:p-12 rounded-3xl border border-[#E8EAEE] shadow-sm max-w-4xl mx-auto space-y-6">
+            <div className="flex items-center gap-3">
+              <Award className="h-6 w-6 text-emerald-600" />
+              <h2 className="text-2xl font-bold text-[#171B2B] font-display">
+                Our Transparent Free Plan Promise
               </h2>
             </div>
-            <SegmentedControl
-              ariaLabel="Use case category"
-              value={activeUseCase}
-              onChange={setActiveUseCase}
-              options={[
-                { value: 'podcasters', label: 'Podcasters' },
-                { value: 'creators', label: 'Creators' },
-                { value: 'marketing', label: 'Marketing' },
-                { value: 'agencies', label: 'Agencies' },
-              ]}
-            />
-          </div>
-
-          <Card className="p-6 md:p-8">
-            {activeUseCase === 'podcasters' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <div className="md:col-span-5 aspect-[4/3] rounded-2xl overflow-hidden">
-                  <MediaImage
-                    src="/src/assets/images/podcast_studio_host_1795025514646.jpg"
-                    alt="Podcast host recording in studio"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="md:col-span-7 space-y-4">
-                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#155EEF]">
-                    <Users className="h-4 w-4" />
-                    <span>Podcast repurposing tool</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-[#171B2B] font-display">
-                    Turn every 60-minute episode into 10+ vertical highlights
-                  </h3>
-                  <p className="text-sm text-[#646A7B] leading-relaxed">
-                    Identify guest debates, surprising stories, and actionable advice automatically. HEMLO switches framing smoothly between host and guest and applies consistent show captions.
-                  </p>
-                  <Link to="/dashboard/create" className="inline-block">
-                    <Button>Clip a podcast episode</Button>
-                  </Link>
-                </div>
+            <p className="text-sm text-[#646A7B] leading-relaxed">
+              We do not claim unlimited magic compute power — instead, we offer honest, community-driven free processing:
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium text-[#171B2B]">
+              <div className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>Zero Watermarks:</strong> Every exported MP4 is 100% clean and unbranded.</span>
               </div>
-            )}
-
-            {activeUseCase === 'creators' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <div className="md:col-span-5 aspect-[4/3] rounded-2xl overflow-hidden">
-                  <MediaImage
-                    src="/src/assets/images/creator_desk_setup_1795025605312.jpg"
-                    alt="YouTube creator filming at desk"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="md:col-span-7 space-y-4">
-                  <p className="text-xs font-semibold text-[#155EEF]">YouTube Shorts &amp; TikTok creators</p>
-                  <h3 className="text-2xl font-bold text-[#171B2B] font-display">
-                    Publish daily vertical videos from your weekly YouTube uploads
-                  </h3>
-                  <p className="text-sm text-[#646A7B] leading-relaxed">
-                    Stop scrubbing timelines manually. Extract punchy tutorials, remove dead pauses, and resize to 9:16 with animated captions ready for Shorts and Reels.
-                  </p>
-                  <Link to="/dashboard/create" className="inline-block">
-                    <Button>Create creator clips</Button>
-                  </Link>
-                </div>
+              <div className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>1080x1920 HD:</strong> Full mobile resolution, never downscaled to 720p.</span>
               </div>
-            )}
-
-            {activeUseCase === 'marketing' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <div className="md:col-span-5 aspect-[4/3] rounded-2xl overflow-hidden">
-                  <MediaImage
-                    src="/src/assets/images/founder_keynote_stage_1795025605727.jpg"
-                    alt="Founder delivering keynote presentation"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="md:col-span-7 space-y-4">
-                  <p className="text-xs font-semibold text-[#155EEF]">B2B &amp; Product Marketing</p>
-                  <h3 className="text-2xl font-bold text-[#171B2B] font-display">
-                    Repurpose webinars, demos, and keynotes into LinkedIn &amp; Reels assets
-                  </h3>
-                  <p className="text-sm text-[#646A7B] leading-relaxed">
-                    Keep brand colors, fonts, and outro calls-to-action locked across every product announcement and customer interview.
-                  </p>
-                  <Link to="/dashboard/brand" className="inline-block">
-                    <Button>Configure brand kit</Button>
-                  </Link>
-                </div>
+              <div className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>Up to 60-Minute Videos:</strong> Ample duration for standard podcasts and streams.</span>
               </div>
-            )}
-
-            {activeUseCase === 'agencies' && (
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <div className="md:col-span-5 aspect-[4/3] rounded-2xl overflow-hidden">
-                  <MediaImage
-                    src="/src/assets/images/interview_couch_conversation_1795025530354.jpg"
-                    alt="Agency creative team reviewing interview clips"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="md:col-span-7 space-y-4">
-                  <p className="text-xs font-semibold text-[#155EEF]">Content Agencies &amp; Studios</p>
-                  <h3 className="text-2xl font-bold text-[#171B2B] font-display">
-                    Manage multiple client workspaces and batch clipping queues
-                  </h3>
-                  <p className="text-sm text-[#646A7B] leading-relaxed">
-                    Switch between client brand kits, schedule multi-platform calendars, and deliver consistent short-form packages every week.
-                  </p>
-                  <Link to="/dashboard" className="inline-block">
-                    <Button>Open workspace</Button>
-                  </Link>
-                </div>
+              <div className="flex items-start gap-2">
+                <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>Fair Queue:</strong> 1 active video processing job per user to maintain cloud reliability.</span>
               </div>
-            )}
-          </Card>
-        </section>
-
-        {/* PRICING PREVIEW */}
-        <section id="pricing" className="max-w-[1200px] mx-auto px-5 md:px-8 py-14 md:py-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-            <div>
-              <p className="text-sm font-semibold text-[#155EEF] mb-2">Pricing</p>
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#171B2B] font-display">
-                Simple plans that scale with your output.
-              </h2>
             </div>
-            <SegmentedControl
-              ariaLabel="Billing cycle"
-              value={billing}
-              onChange={setBilling}
-              options={[
-                { value: 'monthly', label: 'Monthly' },
-                { value: 'annual', label: 'Annual (Save 20%)' },
-              ]}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {PRICING_PLANS.map((plan) => {
-              const price = billing === 'annual' ? plan.annualMonthlyPriceUsd : plan.monthlyPriceUsd;
-              const savings = calculateAnnualSavingsPercent(plan.monthlyPriceUsd, plan.annualMonthlyPriceUsd);
-              return (
-                <Card
-                  key={plan.id}
-                  elevated={Boolean(plan.recommended)}
-                  className={`p-6 flex flex-col justify-between ${
-                    plan.recommended ? 'border-2 border-[#155EEF]' : ''
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="text-lg font-bold text-[#171B2B] font-display">{plan.name}</h3>
-                      {plan.recommended ? (
-                        <span className="text-xs font-bold text-[#155EEF]">Recommended</span>
-                      ) : null}
-                    </div>
-                    <p className="text-xs text-[#646A7B] mt-1">{plan.audience}</p>
-
-                    <div className="mt-5 flex items-baseline gap-1.5">
-                      <span className="text-3xl font-extrabold text-[#171B2B] font-display tabular-nums">
-                        ${price}
-                      </span>
-                      <span className="text-xs text-[#646A7B]">/ month</span>
-                      {billing === 'annual' && savings > 0 ? (
-                        <span className="ml-auto text-xs font-semibold text-[#155EEF] tabular-nums">
-                          Save {savings}%
-                        </span>
-                      ) : null}
-                    </div>
-
-                    <p className="text-xs font-semibold text-[#171B2B] mt-4 pt-4 border-t border-[#E8EAEE]">
-                      {plan.limits.monthlyMinutes} · {plan.limits.exportResolution}
-                    </p>
-
-                    <ul className="mt-4 space-y-2 text-xs text-[#646A7B]">
-                      {plan.highlights.map((item) => (
-                        <li key={item}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Link to="/dashboard/create" className="block mt-6">
-                    <Button
-                      variant={plan.recommended ? 'primary' : 'secondary'}
-                      className="w-full"
-                    >
-                      {plan.ctaLabel}
-                    </Button>
-                  </Link>
-                </Card>
-              );
-            })}
-          </div>
-
-          <div className="mt-6 text-center">
-            <Link to="/pricing" className="text-sm font-semibold text-[#155EEF] hover:underline">
-              Compare full plan limits and workspace allowances →
-            </Link>
           </div>
         </section>
 
-        {/* FAQ */}
-        <section className="max-w-[840px] mx-auto px-5 md:px-8 py-14 md:py-20">
-          <div className="text-center mb-10">
-            <p className="text-sm font-semibold text-[#155EEF] mb-2">FAQ</p>
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#171B2B] font-display">
-              Common questions about HEMLO
-            </h2>
-          </div>
+        {/* FAQ ACCORDION */}
+        <div className="max-w-[1200px] mx-auto px-5 md:px-8">
+          <FaqAccordion items={HOMEPAGE_FAQS} title="Frequently Asked Questions About HEMLO" />
+        </div>
 
-          <div className="space-y-3">
-            {FAQ_ITEMS.map((item, idx) => {
-              const open = openFaq === idx;
-              return (
-                <Card key={item.q} className="overflow-hidden">
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    onClick={() => setOpenFaq(open ? null : idx)}
-                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
-                  >
-                    <span className="text-base font-bold text-[#171B2B]">{item.q}</span>
-                    <ChevronDown
-                      className={`h-5 w-5 text-[#646A7B] shrink-0 transition-transform duration-150 ${
-                        open ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-                  {open ? (
-                    <div className="px-6 pb-5 text-sm text-[#646A7B] leading-relaxed">
-                      {item.a}
-                    </div>
-                  ) : null}
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* BOTTOM CTA */}
-        <section className="max-w-[1200px] mx-auto px-5 md:px-8 pb-6">
-          <Card elevated className="p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="max-w-xl">
-              <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#171B2B] font-display">
-                Ready to find the strongest clips in your next video?
-              </h2>
-              <p className="text-sm md:text-base text-[#646A7B] mt-2">
-                Paste a link or upload a recording and explore your AI-scored short clips inside the HEMLO workspace.
-              </p>
-            </div>
-            <Link to="/dashboard/create" className="shrink-0">
-              <Button size="lg">
-                Start creating
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          </Card>
-        </section>
+        {/* FINAL CONVERSION BANNER */}
+        <div className="max-w-[1200px] mx-auto px-5 md:px-8">
+          <SeoCtaBanner
+            heading="Why pay for expensive AI clipping software when you can create clips with HEMLO?"
+            subheading="Turn long videos into viral-ready Shorts, Reels and TikToks for free."
+            primaryButtonText="Clip Your Video Free"
+          />
+        </div>
       </main>
 
       <MarketingFooter />

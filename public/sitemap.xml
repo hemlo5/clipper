@@ -1,13 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
   <url>
-    <loc>/</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://hemloai.com/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Core Free Clipper Tool -->
   <url>
-    <loc>/pricing</loc>
+    <loc>https://hemloai.com/free-ai-video-clipper</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Competitor Landing Pages -->
+  <url>
+    <loc>https://hemloai.com/opusclip-alternative</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/free-opusclip-alternative</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/opusclip-vs-hemlo</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/katto-alternative</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/free-katto-alternative</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/katto-vs-hemlo</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/klap-alternative</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/vizard-alternative</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/best-free-ai-video-clipper</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Automated Clipping & Use Cases -->
+  <url>
+    <loc>https://hemloai.com/automatic-video-clipper</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/ai-podcast-clip-generator</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/long-video-to-shorts</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/youtube-shorts-generator</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/ai-reels-maker</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/podcast-to-shorts</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/video-repurposing-tool</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Gaming Landing Pages -->
+  <url>
+    <loc>https://hemloai.com/gta-6-clipper</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/gaming-clip-maker</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/gameplay-to-shorts</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/twitch-clip-generator</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/youtube-gaming-clips</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Blog Index -->
+  <url>
+    <loc>https://hemloai.com/blog</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Blog Articles -->
+  <url>
+    <loc>https://hemloai.com/blog/best-free-ai-video-clippers-2026</loc>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/blog/best-free-opusclip-alternatives-2026</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/blog/opusclip-vs-katto-vs-hemlo</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/blog/how-to-turn-podcast-into-youtube-shorts</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/blog/how-to-clip-gta-6-gameplay-into-shorts</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://hemloai.com/blog/how-ai-video-clipping-works</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
   </url>
 </urlset>

@@ -16,6 +16,7 @@ export interface ClipPreviewModalProps {
 
 export function ClipPreviewModal({ clip, onClose }: ClipPreviewModalProps) {
   const { apiClient, pushToast } = useHemlo();
+  const videoRef = React.useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = React.useState(false);
   const [currentSec, setCurrentSec] = React.useState(0);
   const [exportRatio, setExportRatio] = React.useState<AspectRatio>('9:16');
@@ -30,7 +31,16 @@ export function ClipPreviewModal({ clip, onClose }: ClipPreviewModalProps) {
   }, [clip]);
 
   React.useEffect(() => {
-    if (!playing || !clip) return;
+    if (!videoRef.current) return;
+    if (playing) {
+      videoRef.current.play().catch(() => {});
+    } else {
+      videoRef.current.pause();
+    }
+  }, [playing]);
+
+  React.useEffect(() => {
+    if (!playing || !clip || clip.videoUrl) return;
     const timer = window.setInterval(() => {
       setCurrentSec((prev) => {
         if (prev + 0.25 >= clip.endSec) {
@@ -112,36 +122,55 @@ export function ClipPreviewModal({ clip, onClose }: ClipPreviewModalProps) {
                 : 'aspect-video'
             }`}
           >
-            <MediaImage src={clip.thumbnailUrl} alt={clip.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+            {clip.videoUrl ? (
+              <video
+                ref={videoRef}
+                src={clip.videoUrl}
+                className="w-full h-full object-cover"
+                playsInline
+                autoPlay
+                loop
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
+                onTimeUpdate={(e) => {
+                  const v = e.currentTarget;
+                  setCurrentSec(clip.startSec + (v.currentTime || 0));
+                }}
+              />
+            ) : (
+              <MediaImage src={clip.thumbnailUrl} alt={clip.title} className="w-full h-full object-cover" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent pointer-events-none" />
 
             {/* Top subtle overlay headline */}
             {clip.editMetadata.overlayHeadline ? (
-              <div className="absolute top-3 left-3 right-3 text-center">
+              <div className="absolute top-3 left-3 right-3 text-center pointer-events-none">
                 <span className="inline-block bg-white/95 text-[#171B2B] text-xs font-bold px-3 py-1 rounded-xl shadow-sm">
                   {clip.editMetadata.overlayHeadline}
                 </span>
               </div>
             ) : null}
 
-            {/* Animated caption preview */}
-            <div className="absolute bottom-11 left-3 right-3 text-center">
-              <div className="inline-flex flex-wrap items-center justify-center gap-1.5 bg-[#171B2B]/85 px-3 py-2 rounded-2xl">
-                {visibleWords.map((w, idx) => {
-                  const isCurrent = windowStart + idx === activeIdx;
-                  return (
-                    <span
-                      key={w.id}
-                      className={`text-sm font-extrabold tracking-tight transition-colors ${
-                        isCurrent ? 'text-[#60A5FA]' : 'text-white'
-                      }`}
-                    >
-                      {w.text}
-                    </span>
-                  );
-                })}
+            {/* Animated caption preview (shown when videoUrl not burning them or for simulated preview) */}
+            {!clip.videoUrl ? (
+              <div className="absolute bottom-11 left-3 right-3 text-center">
+                <div className="inline-flex flex-wrap items-center justify-center gap-1.5 bg-[#171B2B]/85 px-3 py-2 rounded-2xl">
+                  {visibleWords.map((w, idx) => {
+                    const isCurrent = windowStart + idx === activeIdx;
+                    return (
+                      <span
+                        key={w.id}
+                        className={`text-sm font-extrabold tracking-tight transition-colors ${
+                          isCurrent ? 'text-[#60A5FA]' : 'text-white'
+                        }`}
+                      >
+                        {w.text}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ) : null}
 
             {/* Scrubber bar */}
             <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2">

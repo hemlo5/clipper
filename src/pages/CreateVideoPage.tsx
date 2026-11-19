@@ -114,21 +114,54 @@ export default function CreateVideoPage() {
 
     const sourceLabel = sourceMode === 'url' ? videoUrl.trim() : uploadedFile?.name || 'uploaded-video.mp4';
 
-    // Show clean staged progress modal using MockHemloApiAdapter
-    for (let i = 0; i <= 4; i += 1) {
-      const stage = await apiClient.getProcessingStatus('pending', i);
-      setProcessingState(stage);
-      await new Promise((r) => window.setTimeout(r, 240));
-    }
-
-    const createdProject = await addProjectWithClips(resolvedTitle, sourceMode, sourceLabel, config);
-    setProcessingState(null);
-    pushToast({
-      title: `${createdProject.clipCount} clips generated (Demo Mode)`,
-      description: createdProject.title,
-      tone: 'success',
+    // Real-time staged progress feedback from Modal AI backend
+    setProcessingState({
+      projectId: 'pending',
+      stage: 'ingesting',
+      progressPercent: 15,
+      message: 'Submitting video to Modal AI clipping engine...',
     });
-    navigate(`/dashboard/projects/${createdProject.id}`);
+
+    try {
+      const createdProject = await addProjectWithClips(resolvedTitle, sourceMode, sourceLabel, config);
+
+      if (createdProject.status === 'processing') {
+        let statusRes = await apiClient.getProcessingStatus(createdProject.id);
+        setProcessingState(statusRes);
+
+        while (statusRes.stage !== 'completed') {
+          await new Promise((r) => window.setTimeout(r, 1500));
+          statusRes = await apiClient.getProcessingStatus(createdProject.id);
+          setProcessingState(statusRes);
+          if ((statusRes as any).status === 'failed') {
+            throw new Error(statusRes.message || 'Pipeline failed');
+          }
+        }
+      } else {
+        // Fast mock demo progression
+        for (let i = 1; i <= 4; i += 1) {
+          const stage = await apiClient.getProcessingStatus('pending', i);
+          setProcessingState(stage);
+          await new Promise((r) => window.setTimeout(r, 200));
+        }
+      }
+
+      setProcessingState(null);
+      pushToast({
+        title: `${createdProject.clipCount || 3} clips generated`,
+        description: createdProject.title,
+        tone: 'success',
+      });
+      navigate(`/dashboard/projects/${createdProject.id}`);
+    } catch (submitErr: any) {
+      setProcessingState(null);
+      setFormError(submitErr.message || 'Error processing video.');
+      pushToast({
+        title: 'Video clipping failed',
+        description: submitErr.message,
+        tone: 'error',
+      });
+    }
   };
 
   return (

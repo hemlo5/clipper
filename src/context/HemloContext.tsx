@@ -80,6 +80,40 @@ export function HemloProvider({ children }: { children: React.ReactNode }) {
   const [scheduledPosts, setScheduledPosts] = React.useState<ScheduledPostItem[]>(INITIAL_SCHEDULED_POSTS);
   const [toasts, setToasts] = React.useState<ToastMessage[]>([]);
 
+  // Sync projects and clips from remote backend on initial mount
+  React.useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const remoteProjects = apiClient.listProjects ? await apiClient.listProjects() : [];
+        if (remoteProjects.length > 0 && isMounted) {
+          setProjects((prev) => {
+            const existingIds = new Set(prev.map((p) => p.id));
+            const fresh = remoteProjects.filter((p) => !existingIds.has(p.id));
+            return [...fresh, ...prev];
+          });
+
+          // Fetch clips for any ready remote projects
+          for (const p of remoteProjects) {
+            const pClips = await apiClient.getProjectClips(p.id, []);
+            if (pClips.length > 0 && isMounted) {
+              setClips((prev) => {
+                const existingClipIds = new Set(prev.map((c) => c.id));
+                const freshClips = pClips.filter((c) => !existingClipIds.has(c.id));
+                return [...freshClips, ...prev];
+              });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[HemloProvider] Initial sync notice:', err);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [apiClient]);
+
   const dismissToast = React.useCallback((id: string) => {
     setToasts((prev) => prev.filter((item) => item.id !== id));
   }, []);
@@ -185,14 +219,26 @@ export function HemloProvider({ children }: { children: React.ReactNode }) {
         };
       });
 
+      let finalClips: Clip[] = [];
+      try {
+        const remoteClips = await apiClient.getProjectClips(created.id, []);
+        if (remoteClips && remoteClips.length > 0) {
+          finalClips = remoteClips;
+        }
+      } catch {}
+
+      if (finalClips.length === 0) {
+        finalClips = generatedClips;
+      }
+
       const finalProject: Project = {
         ...created,
-        clipCount: generatedClips.length,
-        thumbnailUrl: thumbnails[0],
+        clipCount: finalClips.length,
+        thumbnailUrl: finalClips[0]?.thumbnailUrl || thumbnails[0],
       };
 
       setProjects((prev) => [finalProject, ...prev]);
-      setClips((prev) => [...generatedClips, ...prev]);
+      setClips((prev) => [...finalClips, ...prev]);
       return finalProject;
     },
     [apiClient]

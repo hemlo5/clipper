@@ -3,25 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HEMLO — AI Video Clipping &amp; Content Repurposing Platform</title>
+    <title>HEMLO – Free AI Video Clipper | Turn Long Videos into Shorts</title>
     <meta
       name="description"
-      content="Turn long-form videos, podcasts, and interviews into engaging YouTube Shorts, Instagram Reels, and TikToks with AI captions, reframing, and viral scoring."
+      content="Create short-form videos from long videos with HEMLO, a free AI video clipper. Generate podcast clips, YouTube Shorts, Instagram Reels and more."
     />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://hemloai.com/" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KGM8P2SDQK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KGM8P2SDQK');
+    </script>
+
+    <!-- Open Graph Metadata -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="HEMLO" />
-    <meta property="og:title" content="HEMLO — AI Video Clipping &amp; Content Repurposing Platform" />
+    <meta property="og:url" content="https://hemloai.com/" />
+    <meta property="og:title" content="HEMLO – Free AI Video Clipper | Turn Long Videos into Shorts" />
     <meta
       property="og:description"
-      content="Find the best moments in your long videos. Turn them into captivating Shorts, Reels, and TikToks with AI."
+      content="Turn podcasts, interviews, gameplay and long-form videos into engaging short clips with HEMLO, the 100% free AI video clipper."
     />
+    <meta property="og:image" content="https://hemloai.com/og-image.jpg" />
+
+    <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="HEMLO — AI Video Clipping &amp; Content Repurposing Platform" />
+    <meta name="twitter:site" content="@hemlo_ai" />
+    <meta name="twitter:title" content="HEMLO – Free AI Video Clipper | Turn Long Videos into Shorts" />
     <meta
       name="twitter:description"
-      content="Your videos. More moments. More content. Repurpose podcasts and long-form video into short-form clips."
+      content="Why pay for expensive AI clipping software when you can create clips with HEMLO? Turn long videos into viral-ready Shorts, Reels and TikToks for free."
     />
+    <meta name="twitter:image" content="https://hemloai.com/og-image.jpg" />
+
     <link
       rel="icon"
       type="image/svg+xml"
@@ -33,6 +53,8 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -40,53 +62,33 @@
           {
             "@type": "Organization",
             "name": "HEMLO",
-            "description": "AI video clipping and content repurposing platform for creators, podcasters, and marketing teams."
+            "url": "https://hemloai.com",
+            "logo": "https://hemloai.com/logo.png",
+            "description": "Free AI video clipping and content repurposing platform for creators, podcasters, and streamers."
           },
           {
             "@type": "WebSite",
             "name": "HEMLO",
-            "description": "Your videos. More moments. More content."
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "HEMLO AI Video Clipper",
-            "applicationCategory": "MultimediaApplication",
-            "operatingSystem": "Web",
-            "description": "Turn long-form videos, podcasts, and interviews into engaging short-form clips for YouTube Shorts, Instagram Reels, and TikTok.",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
+            "url": "https://hemloai.com",
+            "description": "Turn podcasts, interviews, gameplay and long-form videos into engaging short clips for free.",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://hemloai.com/blog?q={search_term_string}",
+              "query-input": "required name=search_term_string"
             }
           },
           {
-            "@type": "FAQPage",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "How does HEMLO find the best moments in long-form videos?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "HEMLO analyzes spoken hooks, topic shifts, pacing, and emotional peaks across transcripts and audio waveforms to surface high-retention moments."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Which aspect ratios and platforms does HEMLO support?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Export clips in 9:16 vertical for YouTube Shorts, Instagram Reels, and TikTok, 1:1 square for LinkedIn, 4:5 portrait, or 16:9 widescreen."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Can I customize captions, fonts, and brand colors?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes. Every clip can be styled with your Brand Kit colors, typography, logo overlay, and animated word-by-word caption presets inside the AI editor."
-                }
-              }
-            ]
+            "@type": "SoftwareApplication",
+            "name": "HEMLO Free AI Video Clipper",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Web",
+            "description": "The free AI video clipper that turns long YouTube videos, podcasts, and interviews into viral Shorts, Reels, and TikToks with animated subtitles and face-tracking.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free forever community plan with unwatermarked 1080p exports."
+            }
           }
         ]
       }
